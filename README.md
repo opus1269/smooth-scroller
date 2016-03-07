@@ -1,3 +1,5 @@
-# Plugin for Intellij based IDE's that provides smooth and kinetic scrolling
+# Smooth and kinetic scrolling for IntelliJ
 
-A work in progress
+Inspired by:
+
+<a href=https://github.com/hccampos/smooth-scroll-plugin>smooth-scroll-plugin</a>
