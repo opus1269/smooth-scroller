@@ -18,6 +18,8 @@
 package com.weebly.opus1269.smoothscroller;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * GUI for the SmoothScroller option
@@ -27,15 +29,29 @@ public class OptionsForm {
     private JSlider fricConstSlider;
     private JSlider fricExpSlider;
     private JPanel panel;
+    private JPanel itemPanel;
+    private JButton resetDefaultsButton;
+
+    public OptionsForm() {
+        resetDefaultsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                OptionsAction.resetDefaults();
+                thresholdSlider.setValue(OptionsAction.getThreshold());
+                fricConstSlider.setValue(OptionsAction.getFricConst());
+                fricExpSlider.setValue(OptionsAction.getFricExp());
+            }
+        });
+    }
 
     public JComponent getRoot() {
         return panel;
     }
 
     public void setData(OptionsAction data) {
-        thresholdSlider.setValue(data.getThreshold());
-        fricConstSlider.setValue(data.getFricConst());
-        fricExpSlider.setValue(data.getFricExp());
+        thresholdSlider.setValue(OptionsAction.getThreshold());
+        fricConstSlider.setValue(OptionsAction.getFricConst());
+        fricExpSlider.setValue(OptionsAction.getFricExp());
     }
 
     public void getData(OptionsAction data) {
@@ -45,9 +61,9 @@ public class OptionsForm {
     }
 
     public boolean isModified(OptionsAction data) {
-        if (thresholdSlider.getValue() != data.getThreshold() ||
-                fricConstSlider.getValue() != data.getFricConst() ||
-                fricExpSlider.getValue() != data.getFricExp()) {
+        if (thresholdSlider.getValue() != OptionsAction.getThreshold() ||
+                fricConstSlider.getValue() != OptionsAction.getFricConst() ||
+                fricExpSlider.getValue() != OptionsAction.getFricExp()) {
             return true;
         }
         return false;

@@ -32,7 +32,7 @@ public class OptionsAction extends AnAction {
     private static final String FRIC_CONST = "SmoothScrollerFricConst";
     private static final String FRIC_EXP = "SmoothScrollerFricExp";
 
-    private OptionsForm mOptionsForm = new OptionsForm();
+    private OptionsForm mOptionsForm;
 
     private static int mThreshold = 50;
     private static int mFricConst = 50;
@@ -50,17 +50,20 @@ public class OptionsAction extends AnAction {
     }
 
     private boolean showDialog() {
-        DialogBuilder builder = new DialogBuilder();
-        builder.setCenterPanel(mOptionsForm.getRoot());
-        //builder.setDimensionServiceKey("GrepConsoleSound");
-        builder.setTitle("Smooth Scroller Options");
-        builder.removeAllActions();
-        builder.addOkAction();
-        builder.addCancelAction();
+//        DialogBuilder builder = new DialogBuilder();
+//        builder.setCenterPanel(mOptionsForm.getRoot());
+//        //builder.setDimensionServiceKey("GrepConsoleSound");
+//        builder.setTitle("Smooth Scroller Options");
+//        builder.removeAllActions();
+//        builder.addOkAction();
+//        builder.addCancelAction();
 
+        OptionsDialog dialog = new OptionsDialog();
+        mOptionsForm = dialog.getOptionsForm();
         mOptionsForm.setData(this);
+        dialog.show();
 
-        boolean isOk = builder.show() == DialogWrapper.OK_EXIT_CODE;
+        boolean isOk = dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE;
         if (isOk) {
             if (mOptionsForm.isModified(this)) {
                 mOptionsForm.getData(this);
@@ -87,17 +90,12 @@ public class OptionsAction extends AnAction {
         SmoothScrollerMouseWheelListener.setFricExp(mFricExpVal);
     }
 
-    private void saveValues() {
+    private static void saveValues() {
         PropertiesComponent props = PropertiesComponent.getInstance();
 
         mThresholdVal = (mThreshold / 100.0F) * SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD;
         mFricConstVal = (mFricConst / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_CONST;
         mFricExpVal = (mFricExp / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_EXP;
-
-        // Not in Android Studio
-//        props.setValue(THRESHOLD, mThresholdVal, SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD);
-//        props.setValue(FRIC_CONST, mFricConstVal, SmoothScrollerMouseWheelListener.DEF_FRIC_CONST);
-//        props.setValue(FRIC_EXP, mFricExpVal, SmoothScrollerMouseWheelListener.DEF_FRIC_EXP);
 
         props.setValue(THRESHOLD, String.valueOf(mThresholdVal));
         props.setValue(FRIC_CONST, String.valueOf(mFricConstVal));
@@ -108,7 +106,27 @@ public class OptionsAction extends AnAction {
         SmoothScrollerMouseWheelListener.setFricExp(mFricExpVal);
     }
 
-    public int getThreshold() {
+    public static void resetDefaults() {
+        PropertiesComponent props = PropertiesComponent.getInstance();
+
+        mThresholdVal = SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD;
+        mFricConstVal = SmoothScrollerMouseWheelListener.DEF_FRIC_CONST;
+        mFricExpVal = SmoothScrollerMouseWheelListener.DEF_FRIC_EXP;
+
+        props.setValue(THRESHOLD, String.valueOf(mThresholdVal));
+        props.setValue(FRIC_CONST, String.valueOf(mFricConstVal));
+        props.setValue(FRIC_EXP, String.valueOf(mFricExpVal));
+
+        SmoothScrollerMouseWheelListener.setSpeedThreshold(mThresholdVal);
+        SmoothScrollerMouseWheelListener.setFricConst(mFricConstVal);
+        SmoothScrollerMouseWheelListener.setFricExp(mFricExpVal);
+
+        mThreshold = Math.round(100 * mThresholdVal / SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD);
+        mFricConst = Math.round(100 * mFricConstVal / SmoothScrollerMouseWheelListener.MAX_FRIC_CONST);
+        mFricExp =   Math.round(100 * mFricExpVal / SmoothScrollerMouseWheelListener.MAX_FRIC_EXP);
+    }
+
+    public static int getThreshold() {
         return mThreshold;
     }
 
@@ -116,7 +134,7 @@ public class OptionsAction extends AnAction {
         OptionsAction.mThreshold = mThreshold;
     }
 
-    public int getFricConst() {
+    public static int getFricConst() {
         return mFricConst;
     }
 
@@ -124,7 +142,7 @@ public class OptionsAction extends AnAction {
         OptionsAction.mFricConst = mFricConst;
     }
 
-    public int getFricExp() {
+    public static int getFricExp() {
         return mFricExp;
     }
 
