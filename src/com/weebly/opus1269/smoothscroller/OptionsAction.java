@@ -50,14 +50,6 @@ public class OptionsAction extends AnAction {
     }
 
     private boolean showDialog() {
-//        DialogBuilder builder = new DialogBuilder();
-//        builder.setCenterPanel(mOptionsForm.getRoot());
-//        //builder.setDimensionServiceKey("GrepConsoleSound");
-//        builder.setTitle("Smooth Scroller Options");
-//        builder.removeAllActions();
-//        builder.addOkAction();
-//        builder.addCancelAction();
-
         OptionsDialog dialog = new OptionsDialog();
         mOptionsForm = dialog.getOptionsForm();
         mOptionsForm.setData(this);
@@ -94,10 +86,8 @@ public class OptionsAction extends AnAction {
         PropertiesComponent props = PropertiesComponent.getInstance();
 
         mThresholdVal = (mThreshold / 100.0F) * SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD;
-        // slider 0 == fricConst 1
-        mFricConstVal = 1.0F - (mFricConst / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_CONST;
-        // slider min 0 == 1.0 min for exponent
-        mFricExpVal = (mFricExp / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_EXP + 1.0F;
+        mFricConstVal = (mFricConst / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_CONST;
+        mFricExpVal = (mFricExp / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_EXP;
 
         props.setValue(THRESHOLD, String.valueOf(mThresholdVal));
         props.setValue(FRIC_CONST, String.valueOf(mFricConstVal));
