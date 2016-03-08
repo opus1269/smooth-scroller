@@ -33,10 +33,10 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
 
     public static final float MAX_SPEED_THRESHOLD = 0.001F;
     public static final float MAX_FRIC_CONST = 1.0F;
-    public static final float MAX_FRIC_EXP = 2.0F;
+    public static final float MAX_FRIC_EXP = 3.0F;
 
     public static final float DEF_SPEED_THRESHOLD = 0.0005F;
-    public static final float DEF_FRIC_CONST = 0.95F;
+    public static final float DEF_FRIC_CONST = 0.9F;
     public static final float DEF_FRIC_EXP = 1.25F;
 
     private static float mSpeedThreshold = DEF_SPEED_THRESHOLD;
