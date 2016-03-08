@@ -31,18 +31,26 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
     private static final int FPS = 50;
     private static final int MILLIS_PER_FRAME = 1000 / FPS;
 
-    private static final double PSEUDO_FRICTION = 0.95d;
-    private static final double PSEUDO_FRICTION_EXP = 1.25d;
-    private static final double SPEED_THRESHOLD = 0.0005d;
+    public static final float MAX_SPEED_THESHOLD = 0.001F;
+    public static final float MAX_FRIC_CONST = 1.0F;
+    public static final float MAX_FRIC_EXP = 2.0F;
+
+    public static final float DEF_SPEED_THESHOLD = 0.0005F;
+    public static final float DEF_FRIC_CONST = 0.95F;
+    public static final float DEF_FRIC_EXP = 1.25F;
+
+    private static float mSpeedThreshold = DEF_SPEED_THESHOLD;
+    private static float mFricConst = DEF_FRIC_CONST;
+    private static float mFricExp = DEF_FRIC_CONST;
 
     private final ScrollingModel mScrollingModel;
     private Timer mTimer = null;
 
     private long mLastTime = 0;
 
-    private double mLastWheelDelta = 0.0d;
+    private float mLastWheelDelta = 0.0F;
 
-    private double mVelocity = 0.0d;
+    private float mVelocity = 0.0F;
 
     /**
      * Constructor for our MouseWheelListener.
@@ -57,13 +65,13 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
 
      @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        final double wheelDelta = e.getPreciseWheelRotation();
+        final float wheelDelta = (float) e.getPreciseWheelRotation();
         final boolean sameDirection = mLastWheelDelta * wheelDelta >= 0;
         mLastWheelDelta = wheelDelta;
 
         if (!sameDirection) {
             // changed direction
-            mVelocity = 0.0d;
+            mVelocity = 0.0f;
         } else {
             // update velocity
             mVelocity = mVelocity + wheelDelta;
@@ -103,17 +111,41 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
         final long elapsedMillis = (currentTime - mLastTime) / 1000000;
         mLastTime = currentTime;
 
-        final double exponent = elapsedMillis / (MILLIS_PER_FRAME / PSEUDO_FRICTION_EXP);
+        final float exponent = elapsedMillis / (MILLIS_PER_FRAME / mFricExp);
 
-        mVelocity = mVelocity * Math.pow(PSEUDO_FRICTION, exponent);
+        mVelocity = mVelocity * (float) Math.pow(mFricConst, exponent);
 
-        final double speed = Math.abs(mVelocity);
-        if (speed >= SPEED_THRESHOLD) {
+        final float speed = Math.abs(mVelocity);
+        if (speed >= mSpeedThreshold) {
             final int currentOffset = mScrollingModel.getVerticalScrollOffset();
-            final int offset = (int) Math.round((currentOffset + mVelocity * elapsedMillis));
+            final int offset = Math.round((currentOffset + mVelocity * elapsedMillis));
             mScrollingModel.scrollVertically(Math.max(0, offset));
         } else {
-            mVelocity = 0.0d;
+            mVelocity = 0.0f;
         }
+    }
+
+    public static float getFricConst() {
+        return mFricConst;
+    }
+
+    public static void setFricConst(float mFricConst) {
+        SmoothScrollerMouseWheelListener.mFricConst = mFricConst;
+    }
+
+    public static float getFricExp() {
+        return mFricExp;
+    }
+
+    public static void setFricExp(float mFricExp) {
+        SmoothScrollerMouseWheelListener.mFricExp = mFricExp;
+    }
+
+    public static float getSpeedThreshold() {
+        return mSpeedThreshold;
+    }
+
+    public static void setSpeedThreshold(float mSpeedThreshold) {
+        SmoothScrollerMouseWheelListener.mSpeedThreshold = mSpeedThreshold;
     }
 }

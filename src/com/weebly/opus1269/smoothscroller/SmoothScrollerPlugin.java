@@ -34,6 +34,10 @@ public class SmoothScrollerPlugin extends AbstractProjectComponent {
         super(project);
 
         _project = project;
+
+        // Initialize scroll parameters
+        OptionsAction.loadValues();
+
     }
 
     public void initComponent() {

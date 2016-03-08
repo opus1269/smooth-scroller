@@ -46,7 +46,10 @@
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
+        <action id="smooth-scroller.OptionsAction" class="com.weebly.opus1269.smoothscroller.OptionsAction"
+                text="Smooth Scroller Options..." description="Configure Smooth Scroller plugin">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
     </actions>
 
     <project-components>
