@@ -43,6 +43,7 @@
             <properties>
               <text value="Speed Limit"/>
               <toolTipText value="Maximum scrolling speed"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="607f" class="javax.swing.JSlider" binding="speedLmtSlider">
@@ -55,6 +56,8 @@
               <minimum value="0"/>
               <paintLabels value="true"/>
               <toolTipText value=""/>
+              <valueIsAdjusting value="false"/>
+              <visible value="false"/>
             </properties>
           </component>
           <component id="47e70" class="javax.swing.JLabel">
