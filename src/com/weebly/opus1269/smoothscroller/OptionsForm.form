@@ -22,6 +22,7 @@
             </constraints>
             <properties>
               <text value="Movement Threshold"/>
+              <toolTipText value="Threshold below which the scrollbar is stopped"/>
             </properties>
           </component>
           <component id="f8680" class="javax.swing.JSlider" binding="thresholdSlider">
@@ -29,9 +30,10 @@
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <majorTickSpacing value="10"/>
+              <majorTickSpacing value="0"/>
               <minimum value="0"/>
               <paintLabels value="false"/>
+              <toolTipText value=""/>
             </properties>
           </component>
           <component id="4cccc" class="javax.swing.JLabel">
@@ -40,7 +42,7 @@
             </constraints>
             <properties>
               <text value="Speed Limit"/>
-              <toolTipText value="Max scrolling speed"/>
+              <toolTipText value="Maximum scrolling speed"/>
             </properties>
           </component>
           <component id="607f" class="javax.swing.JSlider" binding="speedLmtSlider">
@@ -49,9 +51,10 @@
             </constraints>
             <properties>
               <inverted value="false"/>
-              <majorTickSpacing value="10"/>
+              <majorTickSpacing value="0"/>
               <minimum value="0"/>
               <paintLabels value="true"/>
+              <toolTipText value=""/>
             </properties>
           </component>
           <component id="47e70" class="javax.swing.JLabel">
@@ -59,7 +62,8 @@
               <grid row="2" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Friction Exponent"/>
+              <text value="Friction Factor"/>
+              <toolTipText value="Speed reduction factor during kinetic scrolling"/>
             </properties>
           </component>
           <component id="b33f6" class="javax.swing.JSlider" binding="fricExpSlider">
@@ -67,10 +71,11 @@
               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <majorTickSpacing value="10"/>
+              <majorTickSpacing value="0"/>
               <maximum value="100"/>
               <minimum value="0"/>
               <paintLabels value="true"/>
+              <toolTipText value=""/>
               <value value="50"/>
             </properties>
           </component>
