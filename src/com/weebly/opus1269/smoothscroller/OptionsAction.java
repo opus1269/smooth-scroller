@@ -20,7 +20,6 @@ package com.weebly.opus1269.smoothscroller;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.ui.DialogBuilder;
 import com.intellij.openapi.ui.DialogWrapper;
 
 /**
@@ -29,17 +28,17 @@ import com.intellij.openapi.ui.DialogWrapper;
 public class OptionsAction extends AnAction {
 
     private static final String THRESHOLD = "SmoothScrollerThreshold";
-    private static final String FRIC_CONST = "SmoothScrollerFricConst";
+    private static final String SPEED_LMT = "SmoothScrollerSpeedLmt";
     private static final String FRIC_EXP = "SmoothScrollerFricExp";
 
     private OptionsForm mOptionsForm;
 
     private static int mThreshold = 50;
-    private static int mFricConst = 50;
+    private static int mSpeedLmt = 50;
     private static int mFricExp = 50;
 
     private static float mThresholdVal = SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD;
-    private static float mFricConstVal = SmoothScrollerMouseWheelListener.DEF_FRIC_CONST;
+    private static float mSpeedLmtVal = SmoothScrollerMouseWheelListener.DEF_SPEED_LMT;
     private static float mFricExpVal = SmoothScrollerMouseWheelListener.DEF_FRIC_EXP;
 
     @Override
@@ -70,15 +69,15 @@ public class OptionsAction extends AnAction {
         PropertiesComponent props = PropertiesComponent.getInstance();
 
         mThresholdVal = props.getFloat(THRESHOLD, SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD);
-        mFricConstVal = props.getFloat(FRIC_CONST, SmoothScrollerMouseWheelListener.DEF_FRIC_CONST);
+        mSpeedLmtVal = props.getFloat(SPEED_LMT, SmoothScrollerMouseWheelListener.DEF_SPEED_LMT);
         mFricExpVal = props.getFloat(FRIC_EXP, SmoothScrollerMouseWheelListener.DEF_FRIC_EXP);
 
         mThreshold = Math.round(100.0F * mThresholdVal / SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD);
-        mFricConst = Math.round(100.0F * mFricConstVal / SmoothScrollerMouseWheelListener.MAX_FRIC_CONST);
+        mSpeedLmt = Math.round(100.0F * mSpeedLmtVal / SmoothScrollerMouseWheelListener.MAX_SPEED_LMT);
         mFricExp =   Math.round(100.0F * mFricExpVal / SmoothScrollerMouseWheelListener.MAX_FRIC_EXP);
 
         SmoothScrollerMouseWheelListener.setSpeedThreshold(mThresholdVal);
-        SmoothScrollerMouseWheelListener.setFricConst(mFricConstVal);
+        SmoothScrollerMouseWheelListener.setSpeedLmt(mSpeedLmtVal);
         SmoothScrollerMouseWheelListener.setFricExp(mFricExpVal);
     }
 
@@ -86,15 +85,15 @@ public class OptionsAction extends AnAction {
         PropertiesComponent props = PropertiesComponent.getInstance();
 
         mThresholdVal = (mThreshold / 100.0F) * SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD;
-        mFricConstVal = (mFricConst / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_CONST;
+        mSpeedLmtVal = (mSpeedLmt / 100.0F) * SmoothScrollerMouseWheelListener.MAX_SPEED_LMT;
         mFricExpVal = (mFricExp / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_EXP;
 
         props.setValue(THRESHOLD, String.valueOf(mThresholdVal));
-        props.setValue(FRIC_CONST, String.valueOf(mFricConstVal));
+        props.setValue(SPEED_LMT, String.valueOf(mSpeedLmtVal));
         props.setValue(FRIC_EXP, String.valueOf(mFricExpVal));
 
         SmoothScrollerMouseWheelListener.setSpeedThreshold(mThresholdVal);
-        SmoothScrollerMouseWheelListener.setFricConst(mFricConstVal);
+        SmoothScrollerMouseWheelListener.setSpeedLmt(mSpeedLmtVal);
         SmoothScrollerMouseWheelListener.setFricExp(mFricExpVal);
     }
 
@@ -102,19 +101,19 @@ public class OptionsAction extends AnAction {
         PropertiesComponent props = PropertiesComponent.getInstance();
 
         mThresholdVal = SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD;
-        mFricConstVal = SmoothScrollerMouseWheelListener.DEF_FRIC_CONST;
+        mSpeedLmtVal = SmoothScrollerMouseWheelListener.DEF_SPEED_LMT;
         mFricExpVal = SmoothScrollerMouseWheelListener.DEF_FRIC_EXP;
 
         props.setValue(THRESHOLD, String.valueOf(mThresholdVal));
-        props.setValue(FRIC_CONST, String.valueOf(mFricConstVal));
+        props.setValue(SPEED_LMT, String.valueOf(mSpeedLmtVal));
         props.setValue(FRIC_EXP, String.valueOf(mFricExpVal));
 
         SmoothScrollerMouseWheelListener.setSpeedThreshold(mThresholdVal);
-        SmoothScrollerMouseWheelListener.setFricConst(mFricConstVal);
+        SmoothScrollerMouseWheelListener.setSpeedLmt(mSpeedLmtVal);
         SmoothScrollerMouseWheelListener.setFricExp(mFricExpVal);
 
         mThreshold = Math.round(100.0F * mThresholdVal / SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD);
-        mFricConst = Math.round(100.0F * mFricConstVal / SmoothScrollerMouseWheelListener.MAX_FRIC_CONST);
+        mSpeedLmt = Math.round(100.0F * mSpeedLmtVal / SmoothScrollerMouseWheelListener.MAX_SPEED_LMT);
         mFricExp =   Math.round(100.0F * mFricExpVal / SmoothScrollerMouseWheelListener.MAX_FRIC_EXP);
     }
 
@@ -122,24 +121,24 @@ public class OptionsAction extends AnAction {
         return mThreshold;
     }
 
-    public void setThreshold(int mThreshold) {
-        OptionsAction.mThreshold = mThreshold;
+    public void setThreshold(int threshold) {
+        mThreshold = threshold;
     }
 
-    public static int getFricConst() {
-        return mFricConst;
+    public static int getSpeedLmt() {
+        return mSpeedLmt;
     }
 
-    public void setFricConst(int mFricConst) {
-        OptionsAction.mFricConst = mFricConst;
+    public void setSpeedLmt(int speedLmt) {
+        mSpeedLmt = speedLmt;
     }
 
     public static int getFricExp() {
         return mFricExp;
     }
 
-    public void setFricExp(int mFricExp) {
-        OptionsAction.mFricExp = mFricExp;
+    public void setFricExp(int fricExp) {
+        mFricExp = fricExp;
     }
 
 }
