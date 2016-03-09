@@ -34,11 +34,11 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
 
     public static final float MAX_SPEED_THRESHOLD = 0.001F;
     public static final float MAX_SPEED_LMT = 1.0F;
-    public static final float MAX_FRIC_EXP = 0.1F;
+    public static final float MAX_FRIC_EXP = .01F;
 
     public static final float DEF_SPEED_THRESHOLD = 0.0005F;
     public static final float DEF_SPEED_LMT = 0.5F;
-    public static final float DEF_FRIC_EXP = 0.05F;
+    public static final float DEF_FRIC_EXP = 0.005F;
 
     private static float sSpeedThreshold = DEF_SPEED_THRESHOLD;
     private static float sSpeedLmt = DEF_SPEED_LMT;
@@ -168,9 +168,9 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
 
         if (!mScrolling) {
             // Basic kinetic scrolling, exponential decay vel_new = vel * e^-lambda*deltaT
-            // mVelocity = mVelocity * Math.exp(-sFricExp * elapsedMillis);
+             mVelocity = mVelocity * Math.exp(-sFricExp * elapsedMillis);
             // basic kinetic scrolling, linear easing
-            mVelocity = mVelocity - sFricExp * mVelocity;
+            //mVelocity = mVelocity - sFricExp * mVelocity;
         }
 
         if (Math.abs(mVelocity) >= sSpeedThreshold) {
