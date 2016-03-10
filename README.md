@@ -15,5 +15,5 @@ Between these and the touchpad/mouse settings on your hardware, you should be ab
 
 You can find the plugin here.
 
-Inspired by: [smooth-scroll-plugin](href=https://github.com/hccampos/smooth-scroll-plugin)
+Inspired by: [smooth-scroll-plugin](https://github.com/hccampos/smooth-scroll-plugin)
 Thanks Hugo!
