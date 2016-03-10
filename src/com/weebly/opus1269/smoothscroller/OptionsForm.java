@@ -28,7 +28,7 @@ public class OptionsForm {
     private JSlider thresholdSlider;
     private JSlider speedLmtSlider;
     private JSlider accLmtSlider;
-    private JSlider fricExpSlider;
+    private JSlider fricSlider;
     private JPanel panel;
     private JPanel itemPanel;
     private JButton resetDefaultsButton;
@@ -41,7 +41,7 @@ public class OptionsForm {
                 thresholdSlider.setValue(OptionsAction.getThreshold());
                 speedLmtSlider.setValue(OptionsAction.getSpeedLmt());
                 accLmtSlider.setValue(OptionsAction.getAccLmt());
-                fricExpSlider.setValue(OptionsAction.getFricExp());
+                fricSlider.setValue(OptionsAction.getFric());
             }
         });
     }
@@ -54,23 +54,20 @@ public class OptionsForm {
         thresholdSlider.setValue(OptionsAction.getThreshold());
         speedLmtSlider.setValue(OptionsAction.getSpeedLmt());
         accLmtSlider.setValue(OptionsAction.getAccLmt());
-        fricExpSlider.setValue(OptionsAction.getFricExp());
+        fricSlider.setValue(OptionsAction.getFric());
     }
 
     public void getData() {
         OptionsAction.setThreshold(thresholdSlider.getValue());
         OptionsAction.setSpeedLmt(speedLmtSlider.getValue());
         OptionsAction.setAccLmt(accLmtSlider.getValue());
-        OptionsAction.setFricExp(fricExpSlider.getValue());
+        OptionsAction.setFric(fricSlider.getValue());
     }
 
     public boolean isModified() {
-        if (thresholdSlider.getValue() != OptionsAction.getThreshold() ||
+        return thresholdSlider.getValue() != OptionsAction.getThreshold() ||
                 speedLmtSlider.getValue() != OptionsAction.getSpeedLmt() ||
                 accLmtSlider.getValue() != OptionsAction.getAccLmt() ||
-                fricExpSlider.getValue() != OptionsAction.getFricExp()) {
-            return true;
-        }
-        return false;
+                fricSlider.getValue() != OptionsAction.getFric();
     }
 }

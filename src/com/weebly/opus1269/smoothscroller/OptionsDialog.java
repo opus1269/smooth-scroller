@@ -36,7 +36,6 @@ public class OptionsDialog extends DialogWrapper {
         setTitle("Smooth Scroller Options");
     }
 
-
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
