@@ -33,11 +33,11 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
     private static final int MILLIS_PER_FRAME = 1000 / FPS;
 
     public static final float MAX_SPEED_THRESHOLD = 0.001F;
-    public static final float MAX_SPEED_LMT = 1.0F;
+    public static final float MAX_SPEED_LMT = 10.0F;
     public static final float MAX_FRIC_EXP = .01F;
 
     public static final float DEF_SPEED_THRESHOLD = 0.0005F;
-    public static final float DEF_SPEED_LMT = 0.5F;
+    public static final float DEF_SPEED_LMT = 5.0F;
     public static final float DEF_FRIC_EXP = 0.005F;
 
     private static float sSpeedThreshold = DEF_SPEED_THRESHOLD;
@@ -121,10 +121,10 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
 //        }
 
 
-//        // apply speed limit
-//        if (Math.abs(mVelocity) > sSpeedLmt) {
-//            mVelocity = sSpeedLmt * Math.signum(mVelocity);
-//        }
+        // apply speed limit
+        if (Math.abs(mVelocity) > sSpeedLmt) {
+            mVelocity = sSpeedLmt * Math.signum(mVelocity);
+        }
     }
 
     @Override
