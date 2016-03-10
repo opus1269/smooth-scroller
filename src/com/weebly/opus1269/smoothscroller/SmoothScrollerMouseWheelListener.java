@@ -33,15 +33,18 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
     private static final int MILLIS_PER_FRAME = 1000 / FPS;
 
     public static final float MAX_SPEED_THRESHOLD = 0.001F;
-    public static final float MAX_SPEED_LMT = 10.0F;
-    public static final float MAX_FRIC_EXP = .01F;
+    public static final float MAX_SPEED_LMT = 100.0F;
+    public static final float MAX_ACC_LMT = 10.0F;
+    public static final float MAX_FRIC_EXP = .015F;
 
     public static final float DEF_SPEED_THRESHOLD = 0.0005F;
-    public static final float DEF_SPEED_LMT = 5.0F;
+    public static final float DEF_SPEED_LMT = 25.0F;
+    public static final float DEF_ACC_LMT = 5.0F;
     public static final float DEF_FRIC_EXP = 0.005F;
 
     private static float sSpeedThreshold = DEF_SPEED_THRESHOLD;
     private static float sSpeedLmt = DEF_SPEED_LMT;
+    private static float sAccLmt = DEF_SPEED_LMT;
     private static float sFricExp = DEF_SPEED_LMT;
 
     private final ScrollingModel mScrollingModel;
@@ -52,7 +55,6 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
     private double mLastWheelDelta = 0.0D;
     private long mLastScrollTime = 0;
     private boolean mScrolling = false;
-    private Timer mScrollTimer = null;
 
     private double mVelocity = 0.0D;
     private ArrayList<Double> mVelocities = new ArrayList<Double>();
@@ -66,10 +68,9 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
     public SmoothScrollerMouseWheelListener(FileEditor editor) {
         mScrollingModel = ((TextEditor) editor).getEditor().getScrollingModel();
         mScrollingModel.disableAnimation();
+
         mTimer = new Timer(MILLIS_PER_FRAME, this);
-        mScrollTimer = new Timer(MILLIS_PER_FRAME, this);
-        mScrollTimer.setRepeats(false);
-    }
+     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -78,9 +79,14 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
             return;
         }
 
-        // don't want to apply any easing to velocity while inputting
+        // don't want to apply any easing to velocity while scrolling
         mScrolling = true;
-        mScrollTimer.restart();
+        mScrollingModel.runActionOnScrollingFinished(new Runnable() {
+            @Override
+            public void run() {
+                mScrolling = false;
+            }
+        });
 
         // track wheel motion delta
         final double wheelDelta = e.getPreciseWheelRotation();
@@ -104,24 +110,28 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
             return;
         }
 
-        // calculate average velocity over last several mouse wheel events
         double scrollDelta = e.getScrollAmount() * wheelDelta;
-        final double newVelocity = scrollDelta / elapsedMillis;
-        // skip small movements
+        double newVelocity = mVelocity + scrollDelta / elapsedMillis;
+
+        // calculate average velocity over last several mouse wheel events
         if (Math.abs(newVelocity) > sSpeedThreshold) {
+            // skip small movements
             if (mVelocities.size() == MAX_VELOCITIES) {
                 mVelocities.remove(0);
             }
             mVelocities.add(newVelocity);
         }
 
+        double oldVelocity = mVelocity;
         mVelocity = getAverage(mVelocities);
-//        if (mVelocity * wheelDelta >= 0.0D) {
-//            mVelocity = mVelocity + wheelDelta * (double) elapsedMillis;
-//        }
 
+        // limit acceleration
+        final double acc = (mVelocity - oldVelocity) / elapsedMillis;
+        if (Math.abs(acc) > sAccLmt) {
+            mVelocity = oldVelocity + sAccLmt * elapsedMillis * Math.signum(acc);
+        }
 
-        // apply speed limit
+        // limit speed
         if (Math.abs(mVelocity) > sSpeedLmt) {
             mVelocity = sSpeedLmt * Math.signum(mVelocity);
         }
@@ -129,13 +139,8 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Timer timer = (Timer) e.getSource();
-        if (timer.isRepeats()) {
-            update();
-        } else {
-            mScrolling = false;
-        }
-    }
+        update();
+     }
 
     /**
      * Starts animating the scroll offset.
@@ -195,12 +200,28 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
         return sum;
     }
 
+    public static float getSpeedThreshold() {
+        return sSpeedThreshold;
+    }
+
+    public static void setSpeedThreshold(float speedThreshold) {
+        sSpeedThreshold = speedThreshold;
+    }
+
     public static float getSpeedLmt() {
         return sSpeedLmt;
     }
 
     public static void setSpeedLmt(float speedLmt) {
         sSpeedLmt = speedLmt;
+    }
+
+    public static float getAccLmt() {
+        return sAccLmt;
+    }
+
+    public static void setAccLmt(float accLmt) {
+        sAccLmt = accLmt;
     }
 
     public static float getFricExp() {
@@ -210,12 +231,4 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
     public static void setFricExp(float fricExp) {
         sFricExp = fricExp;
     }
-
-    public static float getSpeedThreshold() {
-        return sSpeedThreshold;
-    }
-
-    public static void setSpeedThreshold(float speedThreshold) {
-        sSpeedThreshold = speedThreshold;
-    }
-}
+ }

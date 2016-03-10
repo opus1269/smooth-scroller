@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 public class OptionsForm {
     private JSlider thresholdSlider;
     private JSlider speedLmtSlider;
+    private JSlider accLmtSlider;
     private JSlider fricExpSlider;
     private JPanel panel;
     private JPanel itemPanel;
@@ -39,6 +40,7 @@ public class OptionsForm {
                 OptionsAction.resetDefaults();
                 thresholdSlider.setValue(OptionsAction.getThreshold());
                 speedLmtSlider.setValue(OptionsAction.getSpeedLmt());
+                accLmtSlider.setValue(OptionsAction.getAccLmt());
                 fricExpSlider.setValue(OptionsAction.getFricExp());
             }
         });
@@ -51,18 +53,21 @@ public class OptionsForm {
     public void setData() {
         thresholdSlider.setValue(OptionsAction.getThreshold());
         speedLmtSlider.setValue(OptionsAction.getSpeedLmt());
+        accLmtSlider.setValue(OptionsAction.getAccLmt());
         fricExpSlider.setValue(OptionsAction.getFricExp());
     }
 
     public void getData() {
         OptionsAction.setThreshold(thresholdSlider.getValue());
         OptionsAction.setSpeedLmt(speedLmtSlider.getValue());
+        OptionsAction.setAccLmt(accLmtSlider.getValue());
         OptionsAction.setFricExp(fricExpSlider.getValue());
     }
 
     public boolean isModified() {
         if (thresholdSlider.getValue() != OptionsAction.getThreshold() ||
                 speedLmtSlider.getValue() != OptionsAction.getSpeedLmt() ||
+                accLmtSlider.getValue() != OptionsAction.getAccLmt() ||
                 fricExpSlider.getValue() != OptionsAction.getFricExp()) {
             return true;
         }
