@@ -84,7 +84,7 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
 
         // track wheel motion delta
         final double wheelDelta = e.getPreciseWheelRotation();
-        final boolean sameDirection = mLastWheelDelta * wheelDelta >= 0.0D;
+        final boolean sameDirection = mLastWheelDelta * wheelDelta > 0.0D;
         mLastWheelDelta = wheelDelta;
 
         // track time delta
@@ -107,8 +107,8 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
         // calculate average velocity over last several mouse wheel events
         double scrollDelta = e.getScrollAmount() * wheelDelta;
         final double newVelocity = scrollDelta / elapsedMillis;
-        // skip small or reverse movements
-        if (Math.abs(newVelocity) > sSpeedThreshold && mVelocity * newVelocity >= 0.0D) {
+        // skip small movements
+        if (Math.abs(newVelocity) > sSpeedThreshold) {
             if (mVelocities.size() == MAX_VELOCITIES) {
                 mVelocities.remove(0);
             }
