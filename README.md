@@ -13,7 +13,7 @@ There are several options available under Tools -> Smooth Scroller Options...
 Between these and the touchpad/mouse settings on your hardware, you should be able to get good performance.
 
 
-You can find the plugin here.
+You can find the plugin [here](https://plugins.jetbrains.com/plugin/8246).
 
 Inspired by: [smooth-scroll-plugin](https://github.com/hccampos/smooth-scroll-plugin)
 Thanks Hugo!
