@@ -31,15 +31,13 @@ public class OptionsAction extends AnAction {
     private static final String SPEED_LMT = "SmoothScrollerSpeedLmt";
     private static final String FRIC_EXP = "SmoothScrollerFricExp";
 
-    private OptionsForm mOptionsForm;
+    private static int sThreshold = 50;
+    private static int sSpeedLmt = 50;
+    private static int sFricExp = 50;
 
-    private static int mThreshold = 50;
-    private static int mSpeedLmt = 50;
-    private static int mFricExp = 50;
-
-    private static float mThresholdVal = SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD;
-    private static float mSpeedLmtVal = SmoothScrollerMouseWheelListener.DEF_SPEED_LMT;
-    private static float mFricExpVal = SmoothScrollerMouseWheelListener.DEF_FRIC_EXP;
+    private static float sThresholdVal = SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD;
+    private static float sSpeedLmtVal = SmoothScrollerMouseWheelListener.DEF_SPEED_LMT;
+    private static float sFricExpVal = SmoothScrollerMouseWheelListener.DEF_FRIC_EXP;
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -50,14 +48,14 @@ public class OptionsAction extends AnAction {
 
     private boolean showDialog() {
         OptionsDialog dialog = new OptionsDialog();
-        mOptionsForm = dialog.getOptionsForm();
-        mOptionsForm.setData(this);
+        OptionsForm optionsForm = dialog.getOptionsForm();
+        optionsForm.setData();
         dialog.show();
 
         boolean isOk = dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE;
         if (isOk) {
-            if (mOptionsForm.isModified(this)) {
-                mOptionsForm.getData(this);
+            if (optionsForm.isModified()) {
+                optionsForm.getData();
                 saveValues();
             }
         }
@@ -68,77 +66,72 @@ public class OptionsAction extends AnAction {
     public static void loadValues() {
         PropertiesComponent props = PropertiesComponent.getInstance();
 
-        mThresholdVal = props.getFloat(THRESHOLD, SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD);
-        mSpeedLmtVal = props.getFloat(SPEED_LMT, SmoothScrollerMouseWheelListener.DEF_SPEED_LMT);
-        mFricExpVal = props.getFloat(FRIC_EXP, SmoothScrollerMouseWheelListener.DEF_FRIC_EXP);
+        sThresholdVal = props.getFloat(THRESHOLD, SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD);
+        sSpeedLmtVal = props.getFloat(SPEED_LMT, SmoothScrollerMouseWheelListener.DEF_SPEED_LMT);
+        sFricExpVal = props.getFloat(FRIC_EXP, SmoothScrollerMouseWheelListener.DEF_FRIC_EXP);
 
-        mThreshold = Math.round(100.0F * mThresholdVal / SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD);
-        mSpeedLmt = Math.round(100.0F * mSpeedLmtVal / SmoothScrollerMouseWheelListener.MAX_SPEED_LMT);
-        mFricExp =   Math.round(100.0F * mFricExpVal / SmoothScrollerMouseWheelListener.MAX_FRIC_EXP);
+        sThreshold = Math.round(100.0F * sThresholdVal / SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD);
+        sSpeedLmt = Math.round(100.0F * sSpeedLmtVal / SmoothScrollerMouseWheelListener.MAX_SPEED_LMT);
+        sFricExp =   Math.round(100.0F * sFricExpVal / SmoothScrollerMouseWheelListener.MAX_FRIC_EXP);
 
-        SmoothScrollerMouseWheelListener.setSpeedThreshold(mThresholdVal);
-        SmoothScrollerMouseWheelListener.setSpeedLmt(mSpeedLmtVal);
-        SmoothScrollerMouseWheelListener.setFricExp(mFricExpVal);
+        SmoothScrollerMouseWheelListener.setSpeedThreshold(sThresholdVal);
+        SmoothScrollerMouseWheelListener.setSpeedLmt(sSpeedLmtVal);
+        SmoothScrollerMouseWheelListener.setFricExp(sFricExpVal);
     }
 
     private static void saveValues() {
-        PropertiesComponent props = PropertiesComponent.getInstance();
+        sThresholdVal = (sThreshold / 100.0F) * SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD;
+        sSpeedLmtVal = (sSpeedLmt / 100.0F) * SmoothScrollerMouseWheelListener.MAX_SPEED_LMT;
+        sFricExpVal = (sFricExp / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_EXP;
 
-        mThresholdVal = (mThreshold / 100.0F) * SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD;
-        mSpeedLmtVal = (mSpeedLmt / 100.0F) * SmoothScrollerMouseWheelListener.MAX_SPEED_LMT;
-        mFricExpVal = (mFricExp / 100.0F) * SmoothScrollerMouseWheelListener.MAX_FRIC_EXP;
-
-        props.setValue(THRESHOLD, String.valueOf(mThresholdVal));
-        props.setValue(SPEED_LMT, String.valueOf(mSpeedLmtVal));
-        props.setValue(FRIC_EXP, String.valueOf(mFricExpVal));
-
-        SmoothScrollerMouseWheelListener.setSpeedThreshold(mThresholdVal);
-        SmoothScrollerMouseWheelListener.setSpeedLmt(mSpeedLmtVal);
-        SmoothScrollerMouseWheelListener.setFricExp(mFricExpVal);
+        storeProperties();
     }
 
     public static void resetDefaults() {
+        sThresholdVal = SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD;
+        sSpeedLmtVal = SmoothScrollerMouseWheelListener.DEF_SPEED_LMT;
+        sFricExpVal = SmoothScrollerMouseWheelListener.DEF_FRIC_EXP;
+
+        storeProperties();
+
+        sThreshold = Math.round(100.0F * sThresholdVal / SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD);
+        sSpeedLmt = Math.round(100.0F * sSpeedLmtVal / SmoothScrollerMouseWheelListener.MAX_SPEED_LMT);
+        sFricExp =   Math.round(100.0F * sFricExpVal / SmoothScrollerMouseWheelListener.MAX_FRIC_EXP);
+    }
+
+    private static void storeProperties() {
         PropertiesComponent props = PropertiesComponent.getInstance();
 
-        mThresholdVal = SmoothScrollerMouseWheelListener.DEF_SPEED_THRESHOLD;
-        mSpeedLmtVal = SmoothScrollerMouseWheelListener.DEF_SPEED_LMT;
-        mFricExpVal = SmoothScrollerMouseWheelListener.DEF_FRIC_EXP;
+        props.setValue(THRESHOLD, String.valueOf(sThresholdVal));
+        props.setValue(SPEED_LMT, String.valueOf(sSpeedLmtVal));
+        props.setValue(FRIC_EXP, String.valueOf(sFricExpVal));
 
-        props.setValue(THRESHOLD, String.valueOf(mThresholdVal));
-        props.setValue(SPEED_LMT, String.valueOf(mSpeedLmtVal));
-        props.setValue(FRIC_EXP, String.valueOf(mFricExpVal));
-
-        SmoothScrollerMouseWheelListener.setSpeedThreshold(mThresholdVal);
-        SmoothScrollerMouseWheelListener.setSpeedLmt(mSpeedLmtVal);
-        SmoothScrollerMouseWheelListener.setFricExp(mFricExpVal);
-
-        mThreshold = Math.round(100.0F * mThresholdVal / SmoothScrollerMouseWheelListener.MAX_SPEED_THRESHOLD);
-        mSpeedLmt = Math.round(100.0F * mSpeedLmtVal / SmoothScrollerMouseWheelListener.MAX_SPEED_LMT);
-        mFricExp =   Math.round(100.0F * mFricExpVal / SmoothScrollerMouseWheelListener.MAX_FRIC_EXP);
+        SmoothScrollerMouseWheelListener.setSpeedThreshold(sThresholdVal);
+        SmoothScrollerMouseWheelListener.setSpeedLmt(sSpeedLmtVal);
+        SmoothScrollerMouseWheelListener.setFricExp(sFricExpVal);
     }
 
     public static int getThreshold() {
-        return mThreshold;
+        return sThreshold;
     }
 
-    public void setThreshold(int threshold) {
-        mThreshold = threshold;
+    public static void setThreshold(int threshold) {
+        sThreshold = threshold;
     }
 
     public static int getSpeedLmt() {
-        return mSpeedLmt;
+        return sSpeedLmt;
     }
 
-    public void setSpeedLmt(int speedLmt) {
-        mSpeedLmt = speedLmt;
+    public static void setSpeedLmt(int speedLmt) {
+        sSpeedLmt = speedLmt;
     }
 
     public static int getFricExp() {
-        return mFricExp;
+        return sFricExp;
     }
 
-    public void setFricExp(int fricExp) {
-        mFricExp = fricExp;
+    public static void setFricExp(int fricExp) {
+        sFricExp = fricExp;
     }
-
 }

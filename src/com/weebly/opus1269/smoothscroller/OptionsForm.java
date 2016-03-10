@@ -48,19 +48,19 @@ public class OptionsForm {
         return panel;
     }
 
-    public void setData(OptionsAction data) {
+    public void setData() {
         thresholdSlider.setValue(OptionsAction.getThreshold());
         speedLmtSlider.setValue(OptionsAction.getSpeedLmt());
         fricExpSlider.setValue(OptionsAction.getFricExp());
     }
 
-    public void getData(OptionsAction data) {
-        data.setThreshold(thresholdSlider.getValue());
-        data.setSpeedLmt(speedLmtSlider.getValue());
-        data.setFricExp(fricExpSlider.getValue());
+    public void getData() {
+        OptionsAction.setThreshold(thresholdSlider.getValue());
+        OptionsAction.setSpeedLmt(speedLmtSlider.getValue());
+        OptionsAction.setFricExp(fricExpSlider.getValue());
     }
 
-    public boolean isModified(OptionsAction data) {
+    public boolean isModified() {
         if (thresholdSlider.getValue() != OptionsAction.getThreshold() ||
                 speedLmtSlider.getValue() != OptionsAction.getSpeedLmt() ||
                 fricExpSlider.getValue() != OptionsAction.getFricExp()) {
