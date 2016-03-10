@@ -36,7 +36,7 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
 class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionListener {
-    private static final int FPS = 50;
+    private static final int FPS = 20;
     private static final int MILLIS_PER_FRAME = 1000 / FPS;
 
     public static final float MAX_SPEED_THRESHOLD = 0.001F;
@@ -57,10 +57,7 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
     private final ScrollingModel mScrollingModel;
     private Timer mTimer = null;
 
-    private long mLastTime = 0;
-
     private double mLastWheelDelta = 0.0D;
-    private long mLastScrollTime = 0;
     private boolean mScrolling = false;
 
     private double mVelocity = 0.0D;
@@ -81,10 +78,6 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (mLastScrollTime == 0) {
-            mLastScrollTime = System.nanoTime();
-            return;
-        }
 
         // don't want to apply any easing to velocity while scrolling
         mScrolling = true;
@@ -92,6 +85,7 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
             @Override
             public void run() {
                 mScrolling = false;
+                mVelocities.clear();
             }
         });
 
@@ -100,16 +94,6 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
         final boolean sameDirection = mLastWheelDelta * wheelDelta > 0.0D;
         mLastWheelDelta = wheelDelta;
 
-        // track time delta
-        final long currentTime = System.nanoTime();
-        final long elapsedMillis = (currentTime - mLastTime) / 1000000;
-        mLastScrollTime = currentTime;
-
-        if (elapsedMillis == 0) {
-            // it do happen
-            return;
-        }
-
         if (!sameDirection) {
             // changed direction
             mVelocity = 0.0D;
@@ -117,30 +101,37 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
             return;
         }
 
-        double scrollDelta = e.getScrollAmount() * wheelDelta;
-        double newVelocity = mVelocity + scrollDelta / elapsedMillis;
+        final double scrollDelta = e.getScrollAmount() * wheelDelta;
+        final double deltaV = scrollDelta / MILLIS_PER_FRAME;
 
-        // calculate average velocity over last several mouse wheel events
-        if (Math.abs(newVelocity) > sSpeedThreshold) {
+        if (Math.abs(deltaV) < sSpeedThreshold) {
             // skip small movements
-            if (mVelocities.size() == MAX_VELOCITIES) {
-                mVelocities.remove(0);
-            }
-            mVelocities.add(newVelocity);
+            return;
         }
 
-        double oldVelocity = mVelocity;
+        final double newVelocity = mVelocity + deltaV;
+
+        // calculate average velocity over last several mouse wheel events
+        if (mVelocities.size() == MAX_VELOCITIES) {
+            mVelocities.remove(0);
+        }
+        mVelocities.add(newVelocity);
+
+        final double oldVelocity = mVelocity;
         mVelocity = getAverage(mVelocities);
 
         // limit acceleration
-        final double acc = (mVelocity - oldVelocity) / elapsedMillis;
+        final double acc = (mVelocity - oldVelocity) / MILLIS_PER_FRAME;
         if (Math.abs(acc) > sAccLmt) {
-            mVelocity = oldVelocity + sAccLmt * elapsedMillis * Math.signum(acc);
+            mVelocity = oldVelocity + sAccLmt * MILLIS_PER_FRAME * Math.signum(acc);
         }
 
         // limit speed
         if (Math.abs(mVelocity) > sSpeedLmt) {
             mVelocity = sSpeedLmt * Math.signum(mVelocity);
+        }
+        if (Math.abs(mVelocity) < sSpeedThreshold) {
+            mVelocity = 0.0D;
         }
     }
 
@@ -168,27 +159,15 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
      * the scroll offset.
      */
     private void update() {
-        if (mLastTime == 0) {
-            mLastTime = System.nanoTime();
-            return;
-        }
-
-        // track time delta
-        final long currentTime = System.nanoTime();
-        final long elapsedMillis = (currentTime - mLastTime) / 1000000;
-        mLastTime = currentTime;
-
-        if (!mScrolling) {
+         if (!mScrolling) {
             // Basic kinetic scrolling, exponential decay vel_new = vel * e^-lambda*deltaT
-            mVelocity = mVelocity * Math.exp(-sFric * elapsedMillis);
-            // basic kinetic scrolling, linear easing
-            //mVelocity = mVelocity - sFric * mVelocity;
+            mVelocity = mVelocity * Math.exp(-sFric * MILLIS_PER_FRAME);
         }
 
         if (Math.abs(mVelocity) >= sSpeedThreshold) {
             // reposition cursor offset based on current velocity
             final int currentOffset = mScrollingModel.getVerticalScrollOffset();
-            final long offset = Math.round((currentOffset + mVelocity * elapsedMillis));
+            final long offset = Math.round((currentOffset + mVelocity * MILLIS_PER_FRAME));
             mScrollingModel.scrollVertically(Math.max(0, (int) offset));
         } else {
             // bring to stop below threshold
