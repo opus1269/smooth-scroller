@@ -27,27 +27,29 @@ import org.jetbrains.annotations.NotNull;
  * Top level component for the plugin
  */
 public class SmoothScrollerPlugin extends AbstractProjectComponent {
-    private final Project _project;
-    private final Logger _logger = Logger.getInstance(getClass());
+    private final Project mProject;
+    //private final Logger mLogger = Logger.getInstance(getClass());
 
     public SmoothScrollerPlugin(Project project) {
         super(project);
 
-        _project = project;
+        mProject = project;
 
         // Initialize scroll parameters
         OptionsAction.loadValues();
 
     }
 
+    @Override
     public void initComponent() {
-        _project.getMessageBus()
+        mProject.getMessageBus()
                 .connect()
                 .subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorListener());
 
-        _logger.debug("SmoothScroller initialized");
+        //mLogger.debug("SmoothScroller initialized");
     }
 
+    @Override
     public void disposeComponent() {
     }
 
