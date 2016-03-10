@@ -26,9 +26,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class FileEditorListener implements FileEditorManagerListener {
-    private final Map<FileEditor, SmoothScrollerMouseWheelListener> _listeners =
+    private final Map<FileEditor, SmoothScrollerMouseWheelListener> mListeners =
             new HashMap<FileEditor, SmoothScrollerMouseWheelListener>();
 
+    @Override
     public void fileOpened(@NotNull FileEditorManager fileEditorManager, @NotNull VirtualFile virtualFile) {
         FileEditor[] editors = fileEditorManager.getAllEditors();
 
@@ -36,7 +37,7 @@ public class FileEditorListener implements FileEditorManagerListener {
         for (FileEditor fileEditor : editors) {
             if (fileEditor instanceof TextEditor) {
                 SmoothScrollerMouseWheelListener listener = new SmoothScrollerMouseWheelListener(fileEditor);
-                _listeners.put(fileEditor, listener);
+                mListeners.put(fileEditor, listener);
 
                 Editor editor = ((TextEditor) fileEditor).getEditor();
                 editor.getContentComponent().addMouseWheelListener(listener);
@@ -46,8 +47,9 @@ public class FileEditorListener implements FileEditorManagerListener {
         }
     }
 
+    @Override
     public void fileClosed(@NotNull FileEditorManager fileEditorManager, @NotNull VirtualFile virtualFile) {
-        Set<FileEditor> destroyedEditors = new HashSet<FileEditor>(_listeners.keySet());
+        Set<FileEditor> destroyedEditors = new HashSet<FileEditor>(mListeners.keySet());
 
         // Remove all the editors that are still active from the set of destroyed editors.
         for (FileEditor editor : fileEditorManager.getAllEditors()) {
@@ -58,7 +60,7 @@ public class FileEditorListener implements FileEditorManagerListener {
 
         // Remove the wheel listener from all the destroyed editors.
         for (FileEditor fileEditor : destroyedEditors) {
-            SmoothScrollerMouseWheelListener listener = _listeners.get(fileEditor);
+            SmoothScrollerMouseWheelListener listener = mListeners.get(fileEditor);
 
             if (listener != null) {
                 listener.stopAnimating();
@@ -69,6 +71,7 @@ public class FileEditorListener implements FileEditorManagerListener {
         }
     }
 
+    @Override
     public void selectionChanged(@NotNull FileEditorManagerEvent fileEditorManagerEvent) {
     }
 }
