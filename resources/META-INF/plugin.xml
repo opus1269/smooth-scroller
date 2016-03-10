@@ -25,7 +25,7 @@
 <idea-plugin version="2">
     <id>com.weebly.opus1269.smoothscroller</id>
     <name>Smooth Scroller</name>
-    <version>1.0</version>
+    <version>1.1.0</version>
     <vendor email="igreilly1269@gmail.com" url="https://github.com/opus1269">Mike Updike</vendor>
 
     <description><![CDATA[
@@ -42,7 +42,9 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      Version 1.0 - Initial release
+      Version 1.1.0 - Improve scrolling algorithm
+      <br /> <br />
+      Version 1.0.0 - Initial release
     ]]>
     </change-notes>
 
