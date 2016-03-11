@@ -75,6 +75,9 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
+        final double spdTol = Props.get(Props.TOL).VAL;
+        final double spdLmt = Props.get(Props.SPD).VAL;
+        final double accLmt = Props.get(Props.ACC).VAL;
 
         // don't want to apply any easing to velocity while scrolling
         mScrolling = true;
@@ -98,14 +101,16 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
             return;
         }
 
+        // calculate new velocity increment
         final double scrollDelta = e.getScrollAmount() * wheelDelta;
         final double deltaV = scrollDelta / MILLIS_PER_FRAME;
 
-        if (Math.abs(deltaV) < Props.get(Props.TOL).VAL) {
+        if (Math.abs(deltaV) < spdTol) {
             // skip small movements
             return;
         }
 
+        final double oldVelocity = mVelocity;
         final double newVelocity = mVelocity + deltaV;
 
         // calculate average velocity over last several mouse wheel events
@@ -114,20 +119,19 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
         }
         mVelocities.add(newVelocity);
 
-        final double oldVelocity = mVelocity;
         mVelocity = getAverage(mVelocities);
 
         // limit acceleration
         final double acc = (mVelocity - oldVelocity) / MILLIS_PER_FRAME;
-        if (Math.abs(acc) > Props.get(Props.ACC).VAL) {
-            mVelocity = oldVelocity + Props.get(Props.ACC).VAL * MILLIS_PER_FRAME * Math.signum(acc);
+        if (Math.abs(acc) > accLmt) {
+            mVelocity = oldVelocity + accLmt * MILLIS_PER_FRAME * Math.signum(acc);
         }
 
         // limit speed
-        if (Math.abs(mVelocity) > Props.get(Props.SPD).VAL) {
-            mVelocity = Props.get(Props.SPD).VAL * Math.signum(mVelocity);
+        if (Math.abs(mVelocity) > spdLmt) {
+            mVelocity = spdLmt * Math.signum(mVelocity);
         }
-        if (Math.abs(mVelocity) < Props.get(Props.TOL).VAL) {
+        if (Math.abs(mVelocity) < spdTol) {
             zeroVelocity();
         }
     }
@@ -156,12 +160,15 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
      * the scroll offset.
      */
     private void update() {
+        final double spdTol = Props.get(Props.TOL).VAL;
+        final double lambda = Props.get(Props.FRIC).VAL;
+
          if (!mScrolling) {
             // Basic kinetic scrolling, exponential decay vel_new = vel * e^-lambda*deltaT
-            mVelocity = mVelocity * Math.exp(-Props.get(Props.FRIC).VAL * MILLIS_PER_FRAME);
+            mVelocity = mVelocity * Math.exp(-lambda * MILLIS_PER_FRAME);
         }
 
-        if (Math.abs(mVelocity) >= Props.get(Props.TOL).VAL) {
+        if (Math.abs(mVelocity) >= spdTol) {
             // reposition cursor offset based on current velocity
             final int currentOffset = mScrollingModel.getVerticalScrollOffset();
             final long offset = Math.round((currentOffset + mVelocity * MILLIS_PER_FRAME));
