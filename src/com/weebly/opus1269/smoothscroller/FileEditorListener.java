@@ -25,33 +25,21 @@
 
 package com.weebly.opus1269.smoothscroller;
 
+import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.editor.Editor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class FileEditorListener implements FileEditorManagerListener {
-    private final Map<FileEditor, SmoothScrollerMouseWheelListener> mListeners =
-            new HashMap<FileEditor, SmoothScrollerMouseWheelListener>();
+    private final Map<FileEditor, SmoothScrollerMouseWheelListener> mListeners = new HashMap<FileEditor, SmoothScrollerMouseWheelListener>();
 
     @Override
     public void fileOpened(@NotNull FileEditorManager fileEditorManager, @NotNull VirtualFile virtualFile) {
-        FileEditor[] editors = fileEditorManager.getAllEditors();
-
-        // Add a wheel listener to all text editors.
-        for (FileEditor fileEditor : editors) {
-            if (fileEditor instanceof TextEditor) {
-                SmoothScrollerMouseWheelListener listener = new SmoothScrollerMouseWheelListener(fileEditor);
-                mListeners.put(fileEditor, listener);
-
-                Editor editor = ((TextEditor) fileEditor).getEditor();
-                editor.getContentComponent().addMouseWheelListener(listener);
-
-                listener.startAnimating();
-            }
-        }
     }
 
     @Override
@@ -80,5 +68,29 @@ public class FileEditorListener implements FileEditorManagerListener {
 
     @Override
     public void selectionChanged(@NotNull FileEditorManagerEvent fileEditorManagerEvent) {
+        FileEditor oldEditor = fileEditorManagerEvent.getOldEditor();
+        FileEditor newEditor = fileEditorManagerEvent.getNewEditor();
+
+        // stop animating old editor
+        SmoothScrollerMouseWheelListener listener = mListeners.get(oldEditor);
+        if (listener != null) {
+            listener.stopAnimating();
+        }
+
+        // start animating new editor, creating listener if needed
+        if (newEditor instanceof TextEditor) {
+            listener = mListeners.get(newEditor);
+            if (listener != null) {
+                listener.startAnimating();
+            } else {
+                listener = new SmoothScrollerMouseWheelListener(newEditor);
+                mListeners.put(newEditor, listener);
+
+                Editor editor = ((TextEditor) newEditor).getEditor();
+                editor.getContentComponent().addMouseWheelListener(listener);
+
+                listener.startAnimating();
+            }
+        }
     }
 }
