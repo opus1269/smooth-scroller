@@ -25,7 +25,7 @@
 <idea-plugin version="2">
     <id>com.weebly.opus1269.smoothscroller</id>
     <name>Smooth Scroller</name>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <vendor email="igreilly1269@gmail.com" url="https://github.com/opus1269">Mike Updike</vendor>
 
     <description><![CDATA[
@@ -42,6 +42,8 @@
     ]]></description>
 
     <change-notes><![CDATA[
+      Version 1.1.1 - Allow install on all IntelliJ based products
+      <br /> <br />
       Version 1.1.0 - Improve scrolling algorithm
       <br /> <br />
       Version 1.0.0 - Initial release
@@ -53,9 +55,8 @@
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-    <!-- uncomment to enable plugin in all products
+    <!-- Make available to all products -->
     <depends>com.intellij.modules.lang</depends>
-    -->
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
