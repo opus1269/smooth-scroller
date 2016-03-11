@@ -80,17 +80,15 @@ public class FileEditorListener implements FileEditorManagerListener {
         // start animating new editor, creating listener if needed
         if (newEditor instanceof TextEditor) {
             listener = mListeners.get(newEditor);
-            if (listener != null) {
-                listener.startAnimating();
-            } else {
+            if (listener == null) {
                 listener = new SmoothScrollerMouseWheelListener(newEditor);
                 mListeners.put(newEditor, listener);
 
                 Editor editor = ((TextEditor) newEditor).getEditor();
                 editor.getContentComponent().addMouseWheelListener(listener);
-
-                listener.startAnimating();
             }
+
+            listener.startAnimating();
         }
     }
 }
