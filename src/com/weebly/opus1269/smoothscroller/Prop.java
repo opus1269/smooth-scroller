@@ -24,16 +24,34 @@
 
 package com.weebly.opus1269.smoothscroller;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-
 /**
- * Action to allow users to modify the scroll settings
+ * Represents a float value that is common to all editors and
+ * is persisted to the GUI
  */
-public class OptionsAction extends AnAction {
+public class Prop {
 
-    @Override
-    public void actionPerformed(AnActionEvent e) {
-        new OptionsDialog().show();
+    public final String NAME;
+    public final float DEF;
+    private final float MAX;
+    public float VAL;
+    public int POS;
+
+
+    public Prop(String name, float def, float max) {
+        NAME = name;
+        DEF = def;
+        MAX = max;
+        VAL = def;
+        POS = Math.round(100.0F * VAL / MAX);
+    }
+
+    public void setVal(float val) {
+        VAL = val;
+        POS = Math.round(100.0F * VAL / MAX);
+    }
+
+    public void setPos(int pos) {
+        POS = pos;
+        VAL = MAX * POS / 100.0F;
     }
 }

@@ -25,13 +25,13 @@
 package com.weebly.opus1269.smoothscroller;
 
 import com.intellij.openapi.components.AbstractProjectComponent;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Top level component for the plugin
+ *
  */
 public class SmoothScrollerPlugin extends AbstractProjectComponent {
     private final Project mProject;
@@ -43,7 +43,7 @@ public class SmoothScrollerPlugin extends AbstractProjectComponent {
         mProject = project;
 
         // Initialize scroll parameters
-        OptionsAction.loadValues();
+        Props.initialize();
 
     }
 

@@ -43,13 +43,21 @@ public class OptionsDialog extends DialogWrapper {
         setTitle("Smooth Scroller Options");
     }
 
+    @Override
+    public void show() {
+        mOptionsForm.setFromProps();
+
+        super.show();
+
+        if (getExitCode() == DialogWrapper.OK_EXIT_CODE && mOptionsForm.isModified()) {
+            mOptionsForm.setToProps();
+            Props.storeProperties();
+        }
+    }
+
     @Nullable
     @Override
     protected JComponent createCenterPanel() {
         return mOptionsForm.getRoot();
-    }
-
-    public OptionsForm getOptionsForm() {
-        return mOptionsForm;
     }
 }
