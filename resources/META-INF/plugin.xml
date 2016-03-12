@@ -29,11 +29,11 @@
     <vendor email="igreilly1269@gmail.com" url="https://github.com/opus1269">Mike Updike</vendor>
 
     <description><![CDATA[
-    IntelliJ plugin that provides smooth and inertial scrolling to all text editors. It provides acceleration effects
+    This plugin provides smooth and inertial scrolling to all text editors. It provides acceleration effects
     with easing so you can "fling" like on a cell phone. <br />
     <br />
     There are several tuning options available under Tools -> Smooth Scroller Options...<br />
-    Between these and the touchpad/mouse settings on your hardware, you should be able to get the effect you desire.<br />
+    Between these and the touchpad or mouse settings on your hardware, you should be able to get the effect you desire.
     ]]></description>
 
     <change-notes><![CDATA[
