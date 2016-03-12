@@ -1,4 +1,4 @@
-# Smooth and intertial scrolling for IntelliJ based IDE's
+# Smooth and inertial scrolling for IntelliJ based IDE's
 
 IntelliJ plugin that provides smooth scrolling. It also provides acceleration effects
 with easing so you can "fling" like on a cell phone.
