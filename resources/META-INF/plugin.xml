@@ -25,23 +25,20 @@
 <idea-plugin version="2">
     <id>com.weebly.opus1269.smoothscroller</id>
     <name>Smooth Scroller</name>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <vendor email="igreilly1269@gmail.com" url="https://github.com/opus1269">Mike Updike</vendor>
 
     <description><![CDATA[
-    IntelliJ plugin that provides smooth scrolling. It also provides acceleration effects
-    with easing so you can "fling" like on a cell phone. I have tested it with touchpads and mouse wheels on IntelliJ Community
-    and Android Studio. Hopefully, it will work on any IntelliJ product.<br />
+    IntelliJ plugin that provides smooth and inertial scrolling to all text editors. It provides acceleration effects
+    with easing so you can "fling" like on a cell phone. <br />
     <br />
-    There are several options available under Tools -> Smooth Scroller Options...<br />
-
-    Between these and the touchpad/mouse settings on your hardware, you should be able to get good performance.<br />
-    <br />
-    Inspired by:<br />
-    <a href=https://github.com/hccampos/smooth-scroll-plugin>smooth-scroll-plugin</a>
+    There are several tuning options available under Tools -> Smooth Scroller Options...<br />
+    Between these and the touchpad/mouse settings on your hardware, you should be able to get the effect you desire.<br />
     ]]></description>
 
     <change-notes><![CDATA[
+      Version 1.2.0 - Support all editors of class TextEditor
+      <br /> <br />
       Version 1.1.1 - Allow install on all IntelliJ based products
       <br /> <br />
       Version 1.1.0 - Improve scrolling algorithm
