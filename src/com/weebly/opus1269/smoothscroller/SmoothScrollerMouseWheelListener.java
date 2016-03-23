@@ -102,7 +102,6 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
             return;
         }
 
-        System.out.println("Mult:"+scrMut);
         // calculate new velocity increment
         final double scrollDelta = e.getScrollAmount() * wheelDelta * scrMut;
         final double deltaV = scrollDelta / MILLIS_PER_FRAME;
