@@ -78,6 +78,7 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
         final double spdTol = Props.get(Props.TOL).VAL;
         final double spdLmt = Props.get(Props.SPD).VAL;
         final double accLmt = Props.get(Props.ACC).VAL;
+        final double scrMut = Props.get(Props.MULT).VAL;
 
         // don't want to apply any easing to velocity while scrolling
         mScrolling = true;
@@ -102,7 +103,7 @@ class SmoothScrollerMouseWheelListener implements MouseWheelListener, ActionList
         }
 
         // calculate new velocity increment
-        final double scrollDelta = e.getScrollAmount() * wheelDelta;
+        final double scrollDelta = e.getScrollAmount() * wheelDelta * scrMut;
         final double deltaV = scrollDelta / MILLIS_PER_FRAME;
 
         if (Math.abs(deltaV) < spdTol) {

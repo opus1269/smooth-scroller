@@ -1,7 +1,6 @@
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
 /.idea/tasks.xml
 /.idea/libraries
 
@@ -15,3 +14,5 @@
 # Windows clutter
 Thumbs.db
 
+smooth-scroller.jar
+.idea/

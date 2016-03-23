@@ -24,7 +24,12 @@
 
 package com.weebly.opus1269.smoothscroller;
 
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+
 import javax.swing.*;
+
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -37,6 +42,7 @@ public class OptionsForm implements ActionListener {
     private JSlider speedLmtSlider;
     private JSlider accLmtSlider;
     private JSlider fricSlider;
+    private JSlider multSlider;
     private JPanel panel;
     private JPanel itemPanel;
     private JButton resetDefaultsButton;
@@ -48,6 +54,7 @@ public class OptionsForm implements ActionListener {
         mList.add(speedLmtSlider);
         mList.add(accLmtSlider);
         mList.add(fricSlider);
+        mList.add(multSlider);
 
         resetDefaultsButton.addActionListener(this);
     }
@@ -92,4 +99,5 @@ public class OptionsForm implements ActionListener {
     private Prop getProp(int pos) {
         return Props.get(pos);
     }
+
 }
