@@ -24,12 +24,7 @@
 
 package com.weebly.opus1269.smoothscroller;
 
-import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.uiDesigner.core.GridLayoutManager;
-
 import javax.swing.*;
-
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -91,7 +86,7 @@ public class OptionsForm implements ActionListener {
     public void setFromProps() {
         int i = 0;
         for (JSlider slider : mList) {
-            slider.setValue(Props.get(i).POS);
+            slider.setValue(getProp(i).POS);
             i++;
         }
     }
